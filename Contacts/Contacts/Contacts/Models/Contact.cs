@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.Forms;
 
 namespace Contacts.Models
 {
@@ -9,7 +10,7 @@ namespace Contacts.Models
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Number { get; set; }
-        public string Image { get; internal set; }
-        public string Type { get; internal set; }
+        public ImageSource Image { get; set; }
+        public string Type { get; set; }
     }
 }

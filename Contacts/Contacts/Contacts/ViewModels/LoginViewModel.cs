@@ -29,8 +29,11 @@ namespace Contacts.ViewModels
 
             LoginCommand = new Command(async () =>
             {
-                if (Users.Any(e => e.UserName.ToUpper() == User.UserName.ToUpper() && e.Password == User.Password))
-                    await App.Current.MainPage.Navigation.PushAsync(new ContactPage(User));
+                var userFinded = Users.FirstOrDefault(e => e.UserName.ToUpper() == User.UserName.ToUpper() && e.Password == User.Password);
+                if (userFinded != null)
+                {
+                    await App.Current.MainPage.Navigation.PushAsync(new ContactPage(userFinded));
+                }
                 else
                     Result = "Usuario o contraseña no valido";
             });

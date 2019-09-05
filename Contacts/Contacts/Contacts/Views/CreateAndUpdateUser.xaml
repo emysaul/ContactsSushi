@@ -10,9 +10,19 @@
             <Label Style="{StaticResource labelTitle}" 
                        Text="Crear Contacto"
                        TextColor="{StaticResource Primary}" />
-
-            <Image Source="Profile.png" 
-                       Aspect="AspectFit" />
+         
+            <Image 
+                       Aspect="AspectFit" 
+                       Source="{Binding Image, Mode=TwoWay}"
+                       IsVisible="{Binding ShowImage}" >
+            </Image>
+            
+            <Button Text="Load Image"
+                        Command="{Binding TakePhotoCommand}" 
+                        BackgroundColor="White"
+                        BorderWidth="1"
+                        BorderColor="{StaticResource Primary}"
+                        />
 
             <Entry Style="{StaticResource basicInput}"
                        Text="{Binding ContactSelected.Name, Mode=TwoWay}"

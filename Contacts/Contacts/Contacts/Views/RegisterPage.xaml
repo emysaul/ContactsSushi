@@ -12,9 +12,19 @@
                 <Label Style="{StaticResource labelTitle}" 
                        Text="Registrate"
                        TextColor="{StaticResource Primary}"  />
+                
+                <Image 
+                       Aspect="AspectFit" 
+                       Source="{Binding Image, Mode=TwoWay}"
+                       IsVisible="{Binding ShowImage}" >
+                </Image>
 
-                <Image Source="addIcon.png" 
-                    Aspect="AspectFit" />
+                <Button Text="Load Image"
+                        Command="{Binding TakePhotoCommand}" 
+                        BackgroundColor="White"
+                        BorderWidth="1"
+                        BorderColor="{StaticResource Primary}"
+                        />
 
                 <Entry Style="{StaticResource basicInput}"
                        Placeholder="User Name"

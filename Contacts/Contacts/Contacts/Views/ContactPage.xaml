@@ -25,7 +25,7 @@
                 <ColumnDefinition Width="6*" />
             </Grid.ColumnDefinitions>
 
-            <Image Source="addIcon.png" 
+            <Image Source="{Binding Image, Mode=TwoWay}" 
                     Aspect="AspectFit"
                     Grid.Row="0" 
                     Grid.Column="0" />
@@ -59,19 +59,33 @@
                                                       CommandParameter="{Binding .}" />
 
                                     </ViewCell.ContextActions>
-                                    <StackLayout>
-                                        <Image Source="{Binding Image}" 
-                                             Aspect="AspectFill"/>
+                                    <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                        
+                                <Image Source="{Binding Image}" 
+                                       Aspect="AspectFill"
+                                       Grid.Row="0"
+                                       Grid.Column="0" />
                                         
                                         <Label LineBreakMode="NoWrap"
-                                           Text="{Binding Name}"/>
+                                           Text="{Binding Name}"
+                                           Grid.Row="0"
+                                           Grid.Column="1"/>
                                         
                                         <Label LineBreakMode="NoWrap"
-                                           Text="{Binding Number}"/>
+                                           Text="{Binding Number}"
+                                           Grid.Row="1"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="2" />
                                         
-                                        <Label LineBreakMode="NoWrap"
-                                           Text="{Binding Type}"/>
-                                    </StackLayout>
+                                    </Grid>
                                 </ViewCell>
 
                             </DataTemplate>

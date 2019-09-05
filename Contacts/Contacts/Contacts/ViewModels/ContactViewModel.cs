@@ -26,6 +26,21 @@ namespace Contacts.ViewModels
 
         public User User { get; set; }
 
+        private ImageSource _image;
+
+        public ImageSource Image
+        {
+            get { return _image; }
+            set
+            {
+                if (_image != value)
+                {
+                    _image = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
 
         private ObservableCollection<Contact> _contacts;
 
@@ -39,7 +54,6 @@ namespace Contacts.ViewModels
                     _contacts = value;
                     OnPropertyChanged();
                 }
-
             }
         }
 
@@ -48,11 +62,8 @@ namespace Contacts.ViewModels
         public Contact SelectedContact { get; set; } = new Contact();
         public ContactViewModel(User _user)
         {
-            //User = _user;
-            User = new User()
-            {
-                UserName = "Emy"
-            };
+            this.User = _user;
+            this.Image = _user.Image;
 
             Contacts = new ObservableCollection<Contact>();
 
