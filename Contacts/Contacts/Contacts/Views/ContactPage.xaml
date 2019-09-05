@@ -5,11 +5,80 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="Contacts.Views.ContactPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Order="Primary" 
+                     Text="Add"
+                     Priority="0"
+                     Command="{Binding AddOrUpdateContactComand}"/>
+        
+    </ContentPage.ToolbarItems>
+
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="9*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="6*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Source="addIcon.png" 
+                    Aspect="AspectFit"
+                    Grid.Row="0" 
+                    Grid.Column="0" />
+
+            <Label Style="{StaticResource labelTitle}" 
+                   TextColor="{StaticResource Tertiary}"
+                   Text="{Binding User.UserName}"
+                   HorizontalOptions="Start"
+                   Grid.Row="0"
+                   Grid.Column="1" />
+
+            <ListView Grid.Row="1" RowHeight="70"
+                      Grid.ColumnSpan="2"
+                      ItemsSource="{Binding Contacts, Mode=TwoWay}"
+                      SelectedItem="{Binding SelectedContact, Mode=TwoWay}"
+                      x:Name="listViewContacts" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <ViewCell.ContextActions>
+                                        <MenuItem  Text="Delete"
+                                                   Command="{Binding Path=BindingContext.DeleteCommand,
+                                                   Source={x:Reference listViewContacts}}" 
+                                                   CommandParameter="{Binding .}"
+                                                   IsDestructive="True" />
+
+                                        <MenuItem 
+                                                      Text="More" 
+                                                      Command="{Binding Path=BindingContext.ShowMoreCommand, 
+                                                      Source={x:Reference listViewContacts}}"
+                                                      CommandParameter="{Binding .}" />
+
+                                    </ViewCell.ContextActions>
+                                    <StackLayout>
+                                        <Image Source="{Binding Image}" 
+                                             Aspect="AspectFill"/>
+                                        
+                                        <Label LineBreakMode="NoWrap"
+                                           Text="{Binding Name}"/>
+                                        
+                                        <Label LineBreakMode="NoWrap"
+                                           Text="{Binding Number}"/>
+                                        
+                                        <Label LineBreakMode="NoWrap"
+                                           Text="{Binding Type}"/>
+                                    </StackLayout>
+                                </ViewCell>
+
+                            </DataTemplate>
+                        </ListView.ItemTemplate>    
+            </ListView>
+            
+            
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

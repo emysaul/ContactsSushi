@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="Contacts.Views.RegisterPage" BackgroundColor="White">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="10"  VerticalOptions="Center" Spacing="20">
+
+                <Label Style="{StaticResource labelTitle}" 
+                       Text="Registrate"
+                       TextColor="{StaticResource Primary}"  />
+
+                <Image Source="addIcon.png" 
+                    Aspect="AspectFit" />
+
+                <Entry Style="{StaticResource basicInput}"
+                       Placeholder="User Name"
+                       Text="{Binding User.UserName, Mode=TwoWay}"/>
+
+
+                <Entry Style="{StaticResource basicInput}"
+                       Placeholder="Email"
+                       Text="{Binding User.Email, Mode=TwoWay}"/>
+
+
+                <Entry Style="{StaticResource basicInput}"
+                       Placeholder="Password"
+                       IsPassword="True" 
+                       Text="{Binding User.Password, Mode=TwoWay}"/>
+
+                <Entry Style="{StaticResource basicInput}"
+                       Placeholder="Confirme Password"                   
+                       IsPassword="True"
+                       Text="{Binding ConfirmatedPassword, Mode=TwoWay}"/>
+
+                <Button Style="{StaticResource simpleButton}" 
+                        Text="Register"
+                        Command="{Binding RegisterCommand}"/>
+
+                <Label Text="{Binding Result, Mode=OneWay}" 
+                           TextColor="Red"
+                           HorizontalOptions="Center" 
+                           VerticalOptions="End" />
+
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

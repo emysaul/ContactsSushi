@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Contacts.Views;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,7 +11,7 @@ namespace Contacts
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new NavigationPage(new ContactPage(null));
         }
 
         protected override void OnStart()

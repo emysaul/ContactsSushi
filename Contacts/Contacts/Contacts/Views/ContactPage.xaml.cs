@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Contacts.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,10 @@ namespace Contacts.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ContactPage : ContentPage
     {
-        public ContactPage()
+        public ContactPage(Models.User user)
         {
             InitializeComponent();
+            this.BindingContext = new ContactViewModel(user); ;
         }
     }
 }

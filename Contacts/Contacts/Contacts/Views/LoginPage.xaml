@@ -4,12 +4,45 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="Contacts.Views.LoginPage">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+             x:Class="Contacts.Views.LoginPage"  BackgroundColor="White">
+    <ContentPage.Content >
+        <ScrollView>  
+            <StackLayout Padding="10" VerticalOptions="Center">
+            
+                <Label Style="{StaticResource labelTitle}" 
+                       Text="Contacts App"
+                       TextColor="{StaticResource Primary}" />
+            
+                <Image Source="Profile.png" 
+                       Aspect="AspectFit" />
+ 
+                <Entry Style="{StaticResource basicInput}"
+                       Text="{Binding User.UserName, Mode=TwoWay}"
+                       Placeholder="User Name" />
+
+                <Entry Style="{StaticResource basicInput}"
+                       Text="{Binding User.Password, Mode=TwoWay}"
+                       Placeholder="Password"                   
+                       IsPassword="True" /> 
+
+                <Button Style="{StaticResource simpleButton}" 
+                        Text="Login"
+                        Command="{Binding LoginCommand}" />
+
+                <Label Style="{StaticResource labelSubTitle}"
+                    Text="Register" >
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding RegisterCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+                
+                
+
+                <Label Style="{StaticResource labelSubTitle}"
+                    Text="{Binding Result, Mode=TwoWay}"
+                    TextColor="Red" />
+                
         </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>
