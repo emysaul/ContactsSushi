@@ -9,7 +9,7 @@ namespace Contacts.Views
 {
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ContactPage : ContentPage, IViewModel
+    public partial class ContactPage : ContentPage, ISubcriptor
     {
         MonkeyManager monkeyManager = new MonkeyManager();
 
@@ -25,7 +25,7 @@ namespace Contacts.Views
             base.OnAppearing();
             var monkeyContacts = monkeyManager.GetMonkey<Contact>("contacts");
             if (monkeyContacts != null)
-                MessagingCenter.Send<IViewModel, ObservableCollection<Contact>>(this, "ChangeContacts", monkeyContacts);
+                MessagingCenter.Send<ISubcriptor, ObservableCollection<Contact>>(this, "ChangeContacts", monkeyContacts);
         }
     }
 }

@@ -11,21 +11,21 @@ using Xamarin.Forms;
 
 namespace Contacts.ViewModels
 {
-    public class CreateAndUpdateUserViewModel : INotifyPropertyChanged, IViewModel
+    public class CreateAndUpdateUserViewModel : INotifyPropertyChanged, ISubcriptor
     {
-        ObservableCollection<Contact> Contacts = new ObservableCollection<Contact>();
+        public ObservableCollection<Contact> Contacts { get; set; } = new ObservableCollection<Contact>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ICommand SaveCommand { get; set; }
         public ICommand TakePhotoCommand { get; set; }
-
         public ICommand ViewMoreFieldsCommand { get; set; }
-        public ICommand ReturnComand { get; }
+        public ICommand ReturnComand { get; set; }
         public Contact ContactSelected { get; set; }
-        public string Result { get; set; }
 
-        public bool ShowImage { get; set; }
+        public string Result { get; set; }
+        public bool ShowImage { get; set; } = true;
+        public bool ShowMoreFields { get; set; }
 
         private ImageSource _image;
         public ImageSource Image
@@ -44,28 +44,24 @@ namespace Contacts.ViewModels
             }
         }
 
-        public MediaHelper crossMediaHelper = new MediaHelper();
+        MediaHelper crossMediaHelper = new MediaHelper();
         MonkeyManager monkeyManager = new MonkeyManager();
-        public bool ShowMoreFields { get; set; }
         public CreateAndUpdateUserViewModel(Models.Contact contactSelected)
         {
-
-
             ContactSelected = contactSelected;
+
             if (contactSelected != null && !string.IsNullOrEmpty(this.ContactSelected?.ImagePath))
                 this.Image = ImageSource.FromFile(this.ContactSelected.ImagePath);
             else
                 this.Image = "ic_camera.png";
 
             LoadContacts();
+            CreateSubscription();
+            CreateCommands();
+        }
 
-            MessagingCenter.Subscribe<IViewModel, ObservableCollection<Contact>>(this, "ChangeContacts", (sender, contacts) =>
-            {
-
-                LoadContacts();
-                MessagingCenter.Unsubscribe<IViewModel, ObservableCollection<Contact>>(this, "ChangeContacts");
-            });
-
+        private void CreateCommands()
+        {
             SaveCommand = new Command(async () =>
             {
                 if (IsValidUser())
@@ -83,9 +79,9 @@ namespace Contacts.ViewModels
                 ShowMoreFields = true;
             });
 
-            ReturnComand = new Command(() =>
+            ReturnComand = new Command(async () =>
             {
-                App.Current.MainPage.Navigation.PopAsync();
+                await App.Current.MainPage.Navigation.PopAsync();
             });
 
             TakePhotoCommand = new Command(async () =>
@@ -96,6 +92,15 @@ namespace Contacts.ViewModels
                     Image = imagePhoto.Image;
                     this.ContactSelected.ImagePath = imagePhoto.Path;
                 }
+            });
+        }
+
+        private void CreateSubscription()
+        {
+            MessagingCenter.Subscribe<ISubcriptor, ObservableCollection<Contact>>(this, "ChangeContacts", (sender, contacts) =>
+            {
+                LoadContacts();
+                MessagingCenter.Unsubscribe<ISubcriptor, ObservableCollection<Contact>>(this, "ChangeContacts");
             });
         }
 
@@ -111,7 +116,7 @@ namespace Contacts.ViewModels
 
         private void RegisterContact()
         {
-            MessagingCenter.Send<IViewModel, Contact>(this, "SaveContact", this.ContactSelected);
+            MessagingCenter.Send<ISubcriptor, Contact>(this, "SaveContact", this.ContactSelected);
         }
 
         private bool IsValidUser()

@@ -78,7 +78,8 @@
                     <Entry  Grid.Row="0"
                             Grid.Column="1"
                             Placeholder="Name"
-                            Text="{Binding ContactSelected.Name, Mode=TwoWay}"/>
+                            Text="{Binding ContactSelected.Name, Mode=TwoWay}"
+                            />
 
                  
                     <Entry Grid.Row="1"
@@ -109,12 +110,14 @@
                     <Entry  Grid.Row="3"
                             Grid.Column="1"
                             Placeholder="Phone"
-                            Text="{Binding ContactSelected.Phone, Mode=TwoWay}" />
+                            Text="{Binding ContactSelected.Phone, Mode=TwoWay}"
+                            Keyboard="Telephone" />
 
                     <Entry  Grid.Row="4"
                             Grid.Column="1"
                             Placeholder="Mobile"
-                            Text="{Binding ContactSelected.Number, Mode=TwoWay}" />
+                            Text="{Binding ContactSelected.Number, Mode=TwoWay}"
+                            Keyboard="Telephone" />
 
                     
                     
@@ -127,13 +130,15 @@
                     <Entry  Grid.Row="5"
                             Grid.Column="1"
                             Placeholder="Email"
-                            Text="{Binding ContactSelected.Email, Mode=TwoWay}" />
+                            Text="{Binding ContactSelected.Email, Mode=TwoWay}" 
+                            Keyboard="Email"/>
 
                     
                     <Entry  Grid.Row="6"
                             Grid.Column="1"
                             Placeholder="Home"
-                            Text="{Binding ContactSelected.EmailHome, Mode=TwoWay}" />
+                            Text="{Binding ContactSelected.EmailHome, Mode=TwoWay}" 
+                            Keyboard="Email"/>
 
                     <Label Grid.Row="7"
                            Grid.Column="0"
@@ -146,7 +151,8 @@
                             Grid.Column="1"
                             Placeholder="Note"
                             Text="{Binding ContactSelected.Note, Mode=TwoWay}"
-                            IsVisible="{Binding ShowMoreFields}"  VerticalOptions="FillAndExpand"  Keyboard="Chat" />
+                            IsVisible="{Binding ShowMoreFields}"  VerticalOptions="FillAndExpand"
+                            Keyboard="Text" />
 
 
                         <Label Grid.Row="8"

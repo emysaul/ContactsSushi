@@ -12,25 +12,27 @@ using Xamarin.Forms;
 
 namespace Contacts.ViewModels
 {
-    public class LoginViewModel : INotifyPropertyChanged, IViewModel
+    public class LoginViewModel : INotifyPropertyChanged, ISubcriptor
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        public ObservableCollection<User> Users = new ObservableCollection<User>();
+        public ICommand LoginCommand { get; set; }
+        public ICommand RegisterCommand { get; set; }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        MonkeyManager monkeyManager = new MonkeyManager();
+
+        public ObservableCollection<User> Users { get; set; } = new ObservableCollection<User>();
         public User User { get; set; } = new User();
         public string Password { get; set; }
         public string Result { get; set; }
-        public ICommand LoginCommand { get; set; }
-        public ICommand RegisterCommand { get; set; }
-        
-        MonkeyManager monkeyManager = new MonkeyManager();
 
         public LoginViewModel()
         {
             AddSubscriptionBase();
+            CreateCommands();
+        }
 
-           
-
+        private void CreateCommands()
+        {
             LoginCommand = new Command(async () =>
             {
                 var monkeyUsers = monkeyManager.GetMonkey<User>("users");
@@ -57,19 +59,16 @@ namespace Contacts.ViewModels
 
         private void AddSubscriptionBase()
         {
-
-            MessagingCenter.Subscribe<IViewModel, User>(this, "SaveUser", ((sender, user) =>
+            MessagingCenter.Subscribe<ISubcriptor, User>(this, "SaveUser", ((sender, user) =>
             {
                 Users.Add(user);
-                MessagingCenter.Send<IViewModel, ObservableCollection<User>>(this, "ChangeUsers", Users);
+                MessagingCenter.Send<ISubcriptor, ObservableCollection<User>>(this, "ChangeUsers", Users);
             }));
-
         }
 
         ~LoginViewModel()
         {
             MessagingCenter.Unsubscribe<App, string>(this, "SaveUser");
         }
-
     }
 }

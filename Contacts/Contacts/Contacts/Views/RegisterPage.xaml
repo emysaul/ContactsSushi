@@ -33,7 +33,8 @@
 
                 <Entry Style="{StaticResource basicInput}"
                        Placeholder="Email"
-                       Text="{Binding User.Email, Mode=TwoWay}"/>
+                       Text="{Binding User.Email, Mode=TwoWay}"
+                       Keyboard="Email"/>
 
 
                 <Entry Style="{StaticResource basicInput}"

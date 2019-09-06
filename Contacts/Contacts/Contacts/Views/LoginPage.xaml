@@ -18,11 +18,13 @@
  
                 <Entry Style="{StaticResource basicInput}"
                        Text="{Binding User.UserName, Mode=TwoWay}"
-                       Placeholder="User Name" />
+                       Placeholder="User Name" 
+                       x:Name="txtName" />
 
                 <Entry Style="{StaticResource basicInput}"
                        Text="{Binding User.Password, Mode=TwoWay}"
-                       Placeholder="Password"                   
+                       Placeholder="Password" 
+                       x:Name="txtPassword"
                        IsPassword="True" /> 
 
                 <Button Style="{StaticResource simpleButton}" 

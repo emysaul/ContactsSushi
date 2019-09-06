@@ -11,10 +11,21 @@ namespace Contacts.Views
         public LoginPage()
         {
             InitializeComponent();
+
             Barrel.ApplicationId = "MI_BARRIEL_FOLDER";
-            
             this.BindingContext = new LoginViewModel();
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            Clean();
+        }
+
+        private void Clean()
+        {
+            txtName.Text = string.Empty;
+            txtPassword.Text = string.Empty;
+        }
     }
 }

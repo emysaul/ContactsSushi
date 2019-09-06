@@ -4,19 +4,16 @@ using Contacts.Utils;
 using Contacts.Views;
 using Rg.Plugins.Popup.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Contacts.ViewModels
 {
-    public class ContactViewModel : INotifyPropertyChanged, IViewModel
+    public class ContactViewModel : INotifyPropertyChanged, ISubcriptor
     {
         private const string ActionEdit = "Edit";
         private const string ActionCall = "Call";
@@ -26,7 +23,6 @@ namespace Contacts.ViewModels
         public ICommand DetailCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
 
-        public User User { get; set; }
 
         private ImageSource _image;
 
@@ -63,6 +59,7 @@ namespace Contacts.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Contact _selectedContact;
+        public User User { get; set; }
 
         public Contact SelectedContact
         {
@@ -76,17 +73,20 @@ namespace Contacts.ViewModels
             }
         }
 
-
         public ContactViewModel(User _user)
         {
             this.User = _user;
             this.Image = MediaHelper.GetImageFromPath(_user.ImagePath);
 
             Contacts = new ObservableCollection<Contact>();
+
             LoadContacts();
-
             AddSubscriptionBase();
+            CreateCommand();
+        }
 
+        private void CreateCommand()
+        {
             DeleteCommand = new Command<Contact>(async (_selectedContact) =>
             {
                 await DeleteContact(_selectedContact);
@@ -99,7 +99,6 @@ namespace Contacts.ViewModels
 
             AddOrUpdateContactComand = new Command(async () =>
             {
-                AddSubscriptionBase();
                 await App.Current.MainPage.Navigation.PushAsync(new CreateAndUpdateUser(new Contact()));
             });
         }
@@ -116,22 +115,28 @@ namespace Contacts.ViewModels
 
         private void AddSubscriptionBase()
         {
-            MessagingCenter.Subscribe<IViewModel, Contact>(this, "SaveContact", ((sender, contact) =>
+            MessagingCenter.Subscribe<ISubcriptor, Contact>(this, "SaveContact", ((sender, contact) =>
             {
                 if (contact.Id == Guid.Empty)
                 {
                     contact.Id = Guid.NewGuid();
                     Contacts.Add(contact);
+                    monkeyManager.SaveMokey<Contact>(Contacts, "contacts");
                 }
                 else
                 {
                     var contactIndex = Contacts.IndexOf(contact);
-                    Contacts[contactIndex] = contact;
+
+                    if (contactIndex == -1)
+                        App.Current.MainPage.DisplayAlert("Error: editing contact", "Error editing your contact, try again", "OK");
+                    else
+                    {
+                        Contacts[contactIndex] = contact;
+                        monkeyManager.SaveMokey<Contact>(Contacts, "contacts");
+                    }
                 }
 
-                monkeyManager.SaveMokey<Contact>(Contacts, "contacts");
-                
-                MessagingCenter.Send<IViewModel, ObservableCollection<Contact>>(this, "ChangeContacts", Contacts);
+                MessagingCenter.Send<ISubcriptor, ObservableCollection<Contact>>(this, "ChangeContacts", Contacts);
                 SelectedContact = new Contact();
             }));
         }
@@ -175,7 +180,7 @@ namespace Contacts.ViewModels
                 Contacts.Remove(_selectedContact);
                 SelectedContact = new Contact();
 
-                monkeyManager.SaveMokey<Contact>(Contacts, "contacts");
+                await Task.Run(() => { monkeyManager.SaveMokey<Contact>(Contacts, "contacts"); });
             }
             else
             {

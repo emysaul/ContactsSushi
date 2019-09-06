@@ -9,14 +9,19 @@ using Xamarin.Forms;
 
 namespace Contacts.ViewModels
 {
-    public class RegisterViewModel : INotifyPropertyChanged, IViewModel
+    public class RegisterViewModel : INotifyPropertyChanged, ISubcriptor
     {
-        ObservableCollection<User> Users = new ObservableCollection<User>();
+        public ObservableCollection<User> Users { get; set; } = new ObservableCollection<User>();
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public User User { get; set; } = new User();
+        MediaHelper crossMediaHelper = new MediaHelper();
+        MonkeyManager monkeyManager = new MonkeyManager();
 
-        public bool ShowImage { get; set; }
+        public ICommand RegisterCommand { get; set; }
+        public ICommand TakePhotoCommand { get; set; }
+
+        public User User { get; set; } = new User();
 
         private ImageSource _image;
         public ImageSource Image
@@ -34,31 +39,32 @@ namespace Contacts.ViewModels
                 }
             }
         }
-
         public string ConfirmatedPassword { get; set; }
-
         public string Result { get; set; } = string.Empty;
-
-        public ICommand RegisterCommand { get; set; }
-        public ICommand TakePhotoCommand { get; set; }
-
-        public MediaHelper crossMediaHelper = new MediaHelper();
-        MonkeyManager monkeyManager = new MonkeyManager();
+        public bool ShowImage { get; set; }
+ 
         public RegisterViewModel()
         {
             LoadUsers();
+            CreateSubscriptions();
+            CreateCommands();
+        }
 
-            MessagingCenter.Subscribe<IViewModel, ObservableCollection<User>>(this, "ChangeUsers", (sender, users) =>
+        private void CreateSubscriptions()
+        {
+            MessagingCenter.Subscribe<ISubcriptor, ObservableCollection<User>>(this, "ChangeUsers", (sender, users) =>
             {
                 Users = users;
                 monkeyManager.SaveMokey<User>(users, "users");
             });
+        }
 
+        private void CreateCommands()
+        {
             RegisterCommand = new Command(async () =>
             {
                 if (IsValidUser())
                 {
-
                     RegisterUser();
                     this.Result = "User Registered";
                     await App.Current.MainPage.Navigation.PopAsync();
@@ -76,10 +82,9 @@ namespace Contacts.ViewModels
             });
         }
 
-
         private void RegisterUser()
         {
-            MessagingCenter.Send<IViewModel, User>(this, "SaveUser", this.User);
+            MessagingCenter.Send<ISubcriptor, User>(this, "SaveUser", this.User);
         }
 
         private void LoadUsers()
