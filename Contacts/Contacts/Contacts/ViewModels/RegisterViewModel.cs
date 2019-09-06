@@ -48,6 +48,8 @@ namespace Contacts.ViewModels
             LoadUsers();
             CreateSubscriptions();
             CreateCommands();
+
+            this.Image = "ic_camera.png";
         }
 
         private void CreateSubscriptions()
