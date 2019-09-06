@@ -4,9 +4,8 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             
              xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
-             x:Class="Contacts.Views.CreateAndUpdateUser">
+             x:Class="Contacts.Views.CreateAndUpdateUser" Title="New Contact">
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Primary" 
                      Text="Save"

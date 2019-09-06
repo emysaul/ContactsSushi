@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              xmlns:local="clr-namespace:Contacts.Utils"
              xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
-             x:Class="Contacts.Views.ContactPage">
+             x:Class="Contacts.Views.ContactPage" Title="Contacts" BackgroundColor="White">
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Primary" 
                      Text="Add"

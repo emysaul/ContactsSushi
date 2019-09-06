@@ -100,7 +100,7 @@ namespace Contacts.ViewModels
 
             AddOrUpdateContactComand = new Command(async () =>
             {
-                await App.Current.MainPage.Navigation.PushAsync(new CreateAndUpdateUser(new Contact()));
+                await App.Current.MainPage.Navigation.PushAsync(new CreateAndUpdateUser(new Contact()) { Title = "Edit Contact" });
             });
         }
 
@@ -126,7 +126,7 @@ namespace Contacts.ViewModels
                 }
                 else
                 {
-                    var contactIndex = Contacts.IndexOf(contact);
+                    var contactIndex = Contacts.FindIndex(e => e.Id == contact.Id);
 
                     if (contactIndex == -1)
                         App.Current.MainPage.DisplayAlert("Error: editing contact", "Error editing your contact, try again", "OK");
