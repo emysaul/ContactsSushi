@@ -8,9 +8,19 @@ using Xamarin.Forms;
 
 namespace Contacts.Helpers
 {
-    public class CrossMediaHelper
+    public class MediaHelper
     {
-        public async Task<ImageSource> TakePhoto(bool camera = false)
+        public class ImagePhoto
+        {
+            public ImageSource Image { get; set; }
+            public string Path { get; set; }
+        }
+
+        public static ImageSource GetImageFromPath(string path)
+        {
+            return ImageSource.FromFile(path);
+        }
+        public async Task<ImagePhoto> TakePhoto(bool camera = false)
         {
             await CrossMedia.Current.Initialize();
 
@@ -34,13 +44,18 @@ namespace Contacts.Helpers
                 {
                     PhotoSize = PhotoSize.Small
                 });
+
             if (file == null)
                 return null;
 
-            return ImageSource.FromStream(() =>
+            return new ImagePhoto()
             {
-                return file.GetStream();
-            });
+                Image = ImageSource.FromStream(() =>
+              {
+                  return file.GetStream();
+              }),
+                Path = file.Path
+            };
 
         }
     }

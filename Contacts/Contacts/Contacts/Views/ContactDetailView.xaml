@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:local="clr-namespace:Contacts.Utils"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             x:Class="Contacts.Views.ContactDetailView">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:ByteArrayToImageSourceConverter  x:Key="ByteArrayToImageSourceConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout Margin="24"
+                 Padding="24"
+                 Spacing="24"
+                 BackgroundColor="White"
+                 HorizontalOptions="Center"
+                 VerticalOptions="Center">
+
+        <Image Source="{Binding ImagePath, Converter={StaticResource ByteArrayToImageSourceConverter}}"
+               HeightRequest="200"
+               WidthRequest="300"
+               />
+        <Label Text="{Binding Name}"
+               Style="{StaticResource labelTitle}" />
+        <BoxView BackgroundColor="{StaticResource Primary}"
+                 HeightRequest="1"
+                 />
+
+        <Label Text="{Binding Number}"
+               Style="{StaticResource labelSubTitle}" />
+        
+    </StackLayout>
+</pages:PopupPage>

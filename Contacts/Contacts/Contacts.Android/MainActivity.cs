@@ -8,6 +8,8 @@ using Android.Widget;
 using Android.OS;
 using Plugin.Media;
 using Plugin.CurrentActivity;
+using MonkeyCache.FileStore;
+using ImageCircle.Forms.Plugin.Droid;
 
 namespace Contacts.Droid
 {
@@ -19,9 +21,13 @@ namespace Contacts.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
+
             await CrossMedia.Current.Initialize();
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
+            
             base.OnCreate(savedInstanceState);
+            Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
+            ImageCircleRenderer.Init();
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);

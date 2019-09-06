@@ -22,13 +22,24 @@ namespace Contacts.ViewModels
         public string Result { get; set; }
         public ICommand LoginCommand { get; set; }
         public ICommand RegisterCommand { get; set; }
+        
+        MonkeyManager monkeyManager = new MonkeyManager();
 
         public LoginViewModel()
         {
             AddSubscriptionBase();
 
+           
+
             LoginCommand = new Command(async () =>
             {
+                var monkeyUsers = monkeyManager.GetMonkey<User>("users");
+
+                if (monkeyUsers != null)
+                {
+                    Users = monkeyUsers;
+                }
+
                 var userFinded = Users.FirstOrDefault(e => e.UserName.ToUpper() == User.UserName.ToUpper() && e.Password == User.Password);
                 if (userFinded != null)
                 {

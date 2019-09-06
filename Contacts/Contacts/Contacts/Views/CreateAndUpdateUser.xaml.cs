@@ -1,5 +1,6 @@
 ﻿using Contacts.Models;
 using Contacts.ViewModels;
+using MonkeyCache.FileStore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,6 @@ namespace Contacts.Views
         {
             InitializeComponent();
             this.BindingContext = new CreateAndUpdateUserViewModel(selectedContact);
-
         }
     }
 }

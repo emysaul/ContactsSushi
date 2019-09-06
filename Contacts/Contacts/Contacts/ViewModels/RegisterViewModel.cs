@@ -1,16 +1,9 @@
 ﻿using Contacts.Helpers;
 using Contacts.Models;
 using Contacts.Utils;
-using Plugin.Media;
-using Plugin.Media.Abstractions;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -22,7 +15,6 @@ namespace Contacts.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         public User User { get; set; } = new User();
-
 
         public bool ShowImage { get; set; }
 
@@ -39,7 +31,6 @@ namespace Contacts.ViewModels
 
                     if (value != null)
                         ShowImage = true;
-
                 }
             }
         }
@@ -51,12 +42,16 @@ namespace Contacts.ViewModels
         public ICommand RegisterCommand { get; set; }
         public ICommand TakePhotoCommand { get; set; }
 
-        public CrossMediaHelper crossMediaHelper = new CrossMediaHelper();
+        public MediaHelper crossMediaHelper = new MediaHelper();
+        MonkeyManager monkeyManager = new MonkeyManager();
         public RegisterViewModel()
         {
+            LoadUsers();
+
             MessagingCenter.Subscribe<IViewModel, ObservableCollection<User>>(this, "ChangeUsers", (sender, users) =>
             {
                 Users = users;
+                monkeyManager.SaveMokey<User>(users, "users");
             });
 
             RegisterCommand = new Command(async () =>
@@ -72,15 +67,29 @@ namespace Contacts.ViewModels
 
             TakePhotoCommand = new Command(async () =>
             {
-                Image = await crossMediaHelper.TakePhoto();
+                var imagePhoto = await crossMediaHelper.TakePhoto();
+                if (imagePhoto != null)
+                {
+                    Image = imagePhoto.Image;
+                    this.User.ImagePath = imagePhoto.Path;
+                }
             });
         }
 
 
         private void RegisterUser()
         {
-            this.User.Image = Image;
             MessagingCenter.Send<IViewModel, User>(this, "SaveUser", this.User);
+        }
+
+        private void LoadUsers()
+        {
+            var monkeyUsers = monkeyManager.GetMonkey<User>("users");
+
+            if (monkeyUsers != null)
+            {
+                Users = monkeyUsers;
+            }
         }
 
         private bool IsValidUser()
@@ -111,7 +120,5 @@ namespace Contacts.ViewModels
 
             return true;
         }
-
-
     }
 }

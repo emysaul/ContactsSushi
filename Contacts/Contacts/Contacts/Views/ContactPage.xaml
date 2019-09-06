@@ -4,14 +4,20 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
+             xmlns:local="clr-namespace:Contacts.Utils"
              x:Class="Contacts.Views.ContactPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Primary" 
                      Text="Add"
                      Priority="0"
                      Command="{Binding AddOrUpdateContactComand}"/>
-        
+
     </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:ByteArrayToImageSourceConverter  x:Key="ByteArrayToImageSourceConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ContentPage.Content>
         <Grid>
@@ -25,11 +31,6 @@
                 <ColumnDefinition Width="6*" />
             </Grid.ColumnDefinitions>
 
-            <Image Source="{Binding Image, Mode=TwoWay}" 
-                    Aspect="AspectFit"
-                    Grid.Row="0" 
-                    Grid.Column="0" />
-
             <Label Style="{StaticResource labelTitle}" 
                    TextColor="{StaticResource Tertiary}"
                    Text="{Binding User.UserName}"
@@ -42,57 +43,54 @@
                       ItemsSource="{Binding Contacts, Mode=TwoWay}"
                       SelectedItem="{Binding SelectedContact, Mode=TwoWay}"
                       x:Name="listViewContacts" >
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <ViewCell.ContextActions>
-                                        <MenuItem  Text="Delete"
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+
+                        <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem  Text="Delete"
                                                    Command="{Binding Path=BindingContext.DeleteCommand,
                                                    Source={x:Reference listViewContacts}}" 
                                                    CommandParameter="{Binding .}"
                                                    IsDestructive="True" />
 
-                                        <MenuItem 
+                                <MenuItem 
                                                       Text="More" 
                                                       Command="{Binding Path=BindingContext.ShowMoreCommand, 
                                                       Source={x:Reference listViewContacts}}"
                                                       CommandParameter="{Binding .}" />
 
-                                    </ViewCell.ContextActions>
-                                    <Grid>
+                            </ViewCell.ContextActions>
+                            <Grid Padding="10">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                        
-                                <Image Source="{Binding Image}" 
+                                <Image Grid.RowSpan="2"
+                                       Source="{Binding ImagePath, Converter={StaticResource ByteArrayToImageSourceConverter}}"
                                        Aspect="AspectFill"
-                                       Grid.Row="0"
-                                       Grid.Column="0" />
-                                        
-                                        <Label LineBreakMode="NoWrap"
-                                           Text="{Binding Name}"
-                                           Grid.Row="0"
-                                           Grid.Column="1"/>
-                                        
-                                        <Label LineBreakMode="NoWrap"
-                                           Text="{Binding Number}"
-                                           Grid.Row="1"
-                                           Grid.Column="0"
-                                           Grid.ColumnSpan="2" />
-                                        
-                                    </Grid>
-                                </ViewCell>
+                                       HeightRequest="60"
+                                       WidthRequest="60" />
 
-                            </DataTemplate>
-                        </ListView.ItemTemplate>    
+                                <Label Grid.Column="1"
+                                       Text="{Binding Name}"
+                                       FontAttributes="Bold" />
+
+                                <Label Grid.Row="1"
+                                               Grid.Column="1"
+                                               Text="{Binding Number}"
+                                               VerticalOptions="End" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
-            
-            
+
+
         </Grid>
     </ContentPage.Content>
 </ContentPage>

@@ -4,38 +4,165 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
+             
+             xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              x:Class="Contacts.Views.CreateAndUpdateUser">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Order="Primary" 
+                     Text="Save"
+                     Priority="0"
+                     Command="{Binding SaveCommand}"/>
+        <ToolbarItem Order="Secondary" 
+                     Text="Home"
+                     Priority="1"
+                     Command="{Binding ReturnComand}"/>
+    </ContentPage.ToolbarItems>
+
     <ContentPage.Content>
-        <StackLayout>
-            <Label Style="{StaticResource labelTitle}" 
-                       Text="Crear Contacto"
-                       TextColor="{StaticResource Primary}" />
-         
-            <Image 
-                       Aspect="AspectFit" 
-                       Source="{Binding Image, Mode=TwoWay}"
-                       IsVisible="{Binding ShowImage}" >
-            </Image>
-            
-            <Button Text="Load Image"
-                        Command="{Binding TakePhotoCommand}" 
-                        BackgroundColor="White"
-                        BorderWidth="1"
-                        BorderColor="{StaticResource Primary}"
-                        />
+        <ScrollView>
+         <Grid RowSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="8*" />
+            </Grid.RowDefinitions>
+            <BoxView Grid.Row="0" />
 
-            <Entry Style="{StaticResource basicInput}"
-                       Text="{Binding ContactSelected.Name, Mode=TwoWay}"
-                       Placeholder="Name" />
-          
-            <Entry Style="{StaticResource basicInput}"
-                       Text="{Binding ContactSelected.Number, Mode=TwoWay}"
-                       Placeholder="Phone" />
+            <controls:CircleImage Source="{Binding Image}" 
+                                  Aspect="AspectFill" 
+                                  HorizontalOptions="Center"
+                                  VerticalOptions="Center"
+                                  BorderColor="red"
+                                  WidthRequest="1">
+                            <controls:CircleImage.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding TakePhotoCommand}" />
+                            </controls:CircleImage.GestureRecognizers>
 
-            <Button Style="{StaticResource simpleButton}" 
-                        Text="Save Contact"
-                        Command="{Binding SaveCommand}" />
+                <controls:CircleImage.WidthRequest>
+                    <OnPlatform x:TypeArguments="x:Double">
+                        <On Platform="Android, iOS">95</On>
+                        <On Platform="WinPhone">75</On>
+                    </OnPlatform>
+                </controls:CircleImage.WidthRequest>
+                <controls:CircleImage.HeightRequest>
+                    <OnPlatform x:TypeArguments="x:Double">
+                        <On Platform="Android, iOS">95</On>
+                        <On Platform="WinPhone">75</On>
+                    </OnPlatform>
+                </controls:CircleImage.HeightRequest>
+            </controls:CircleImage>
 
-        </StackLayout>
+            <StackLayout Grid.Row="1" Padding="20">
+
+                <Grid ColumnSpacing="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="8*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Text="&#xf007;" 
+                           FontSize="Title"
+                           FontFamily="Font Awesome 5 Free-Regular-400.otf#Font Awesome 5 Free Regular"/>
+                    
+                    <Entry  Grid.Row="0"
+                            Grid.Column="1"
+                            Placeholder="Name"
+                            Text="{Binding ContactSelected.Name, Mode=TwoWay}"/>
+
+                 
+                    <Entry Grid.Row="1"
+                           Grid.Column="1" 
+                           Placeholder="Last Name"
+                           Text="{Binding ContactSelected.LastName, Mode=TwoWay}" />
+
+                    
+                    <Label Grid.Row="2"
+                           Grid.Column="0"
+                           Text="&#xf1ad;" 
+                           FontSize="Title"
+                           FontFamily="Font Awesome 5 Free-Regular-400.otf#Font Awesome 5 Free Regular"/>
+
+                    <Entry  Grid.Row="2"
+                            Grid.Column="1"
+                            Placeholder="Company"
+                            Text="{Binding ContactSelected.Company, Mode=TwoWay}" />
+
+
+                    <Label Grid.Row="3"
+                           Grid.Column="0"
+                           Text="&#xf4ad;" 
+                           FontSize="Title"
+                           FontFamily="Font Awesome 5 Free-Regular-400.otf#Font Awesome 5 Free Regular"/>
+                    
+                    
+                    <Entry  Grid.Row="3"
+                            Grid.Column="1"
+                            Placeholder="Phone"
+                            Text="{Binding ContactSelected.Phone, Mode=TwoWay}" />
+
+                    <Entry  Grid.Row="4"
+                            Grid.Column="1"
+                            Placeholder="Mobile"
+                            Text="{Binding ContactSelected.Number, Mode=TwoWay}" />
+
+                    
+                    
+                    <Label Grid.Row="5"
+                           Grid.Column="0"
+                           Text="&#xf0e0;" 
+                           FontSize="Title"
+                           FontFamily="Font Awesome 5 Free-Regular-400.otf#Font Awesome 5 Free Regular"/>
+
+                    <Entry  Grid.Row="5"
+                            Grid.Column="1"
+                            Placeholder="Email"
+                            Text="{Binding ContactSelected.Email, Mode=TwoWay}" />
+
+                    
+                    <Entry  Grid.Row="6"
+                            Grid.Column="1"
+                            Placeholder="Home"
+                            Text="{Binding ContactSelected.EmailHome, Mode=TwoWay}" />
+
+                    <Label Grid.Row="7"
+                           Grid.Column="0"
+                           Text="&#xf27a;" 
+                           FontSize="Title"
+                           FontFamily="Font Awesome 5 Free-Regular-400.otf#Font Awesome 5 Free Regular"
+                           IsVisible="{Binding ShowMoreFields}" />
+
+                    <Editor  Grid.Row="7"
+                            Grid.Column="1"
+                            Placeholder="Note"
+                            Text="{Binding ContactSelected.Note, Mode=TwoWay}"
+                            IsVisible="{Binding ShowMoreFields}"  VerticalOptions="FillAndExpand"  Keyboard="Chat" />
+
+
+                        <Label Grid.Row="8"
+                           Grid.Column="1"
+                           Margin="0,10,0,0"
+                           Grid.ColumnSpan="2"
+                           HorizontalOptions="Start"
+                           TextColor="Blue"
+                           Text="More Fields"  >
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ViewMoreFieldsCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                </Grid>
+            </StackLayout>
+        </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

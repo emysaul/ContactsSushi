@@ -20,6 +20,8 @@ namespace Contacts.ViewModels
         public ICommand SaveCommand { get; set; }
         public ICommand TakePhotoCommand { get; set; }
 
+        public ICommand ViewMoreFieldsCommand { get; set; }
+        public ICommand ReturnComand { get; }
         public Contact ContactSelected { get; set; }
         public string Result { get; set; }
 
@@ -42,39 +44,73 @@ namespace Contacts.ViewModels
             }
         }
 
-        public CrossMediaHelper crossMediaHelper = new CrossMediaHelper();
+        public MediaHelper crossMediaHelper = new MediaHelper();
+        MonkeyManager monkeyManager = new MonkeyManager();
+        public bool ShowMoreFields { get; set; }
         public CreateAndUpdateUserViewModel(Models.Contact contactSelected)
         {
+
+
             ContactSelected = contactSelected;
+            if (contactSelected != null && !string.IsNullOrEmpty(this.ContactSelected?.ImagePath))
+                this.Image = ImageSource.FromFile(this.ContactSelected.ImagePath);
+            else
+                this.Image = "ic_camera.png";
+
+            LoadContacts();
 
             MessagingCenter.Subscribe<IViewModel, ObservableCollection<Contact>>(this, "ChangeContacts", (sender, contacts) =>
             {
-                Contacts = contacts;
+
+                LoadContacts();
                 MessagingCenter.Unsubscribe<IViewModel, ObservableCollection<Contact>>(this, "ChangeContacts");
             });
 
-            SaveCommand = new Command(() =>
+            SaveCommand = new Command(async () =>
             {
                 if (IsValidUser())
                 {
                     RegisterContact();
                     this.Result = "Contact Registered";
-                    App.Current.MainPage.Navigation.PopAsync();
+                    await App.Current.MainPage.Navigation.PopAsync();
                 }
+                else
+                    await App.Current.MainPage.DisplayAlert("Contact", "Contact Not valid", "Ok");
             });
 
+            ViewMoreFieldsCommand = new Command(() =>
+            {
+                ShowMoreFields = true;
+            });
+
+            ReturnComand = new Command(() =>
+            {
+                App.Current.MainPage.Navigation.PopAsync();
+            });
 
             TakePhotoCommand = new Command(async () =>
             {
-                Image = await crossMediaHelper.TakePhoto();
+                var imagePhoto = await crossMediaHelper.TakePhoto();
+                if (imagePhoto != null)
+                {
+                    Image = imagePhoto.Image;
+                    this.ContactSelected.ImagePath = imagePhoto.Path;
+                }
             });
+        }
 
+        private void LoadContacts()
+        {
+            var monkeyContacts = monkeyManager.GetMonkey<Contact>("contacts");
+
+            if (monkeyContacts != null)
+            {
+                Contacts = monkeyContacts;
+            }
         }
 
         private void RegisterContact()
         {
-            this.ContactSelected.Image = this.Image;
-
             MessagingCenter.Send<IViewModel, Contact>(this, "SaveContact", this.ContactSelected);
         }
 

@@ -1,10 +1,5 @@
 ﻿using Contacts.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using MonkeyCache.FileStore;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -16,7 +11,10 @@ namespace Contacts.Views
         public LoginPage()
         {
             InitializeComponent();
+            Barrel.ApplicationId = "MI_BARRIEL_FOLDER";
+            
             this.BindingContext = new LoginViewModel();
         }
+
     }
 }

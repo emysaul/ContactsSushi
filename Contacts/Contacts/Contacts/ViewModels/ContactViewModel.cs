@@ -1,6 +1,8 @@
-﻿using Contacts.Models;
+﻿using Contacts.Helpers;
+using Contacts.Models;
 using Contacts.Utils;
 using Contacts.Views;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -41,6 +43,7 @@ namespace Contacts.ViewModels
             }
         }
 
+        MonkeyManager monkeyManager = new MonkeyManager();
 
         private ObservableCollection<Contact> _contacts;
 
@@ -59,17 +62,31 @@ namespace Contacts.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Contact SelectedContact { get; set; } = new Contact();
+        private Contact _selectedContact;
+
+        public Contact SelectedContact
+        {
+            get { return _selectedContact; }
+            set
+            {
+                _selectedContact = value;
+
+                if (value != null)
+                    ShowDetaill(value);
+            }
+        }
+
+
         public ContactViewModel(User _user)
         {
             this.User = _user;
-            this.Image = _user.Image;
+            this.Image = MediaHelper.GetImageFromPath(_user.ImagePath);
 
             Contacts = new ObservableCollection<Contact>();
+            LoadContacts();
 
             AddSubscriptionBase();
 
-            DetailCommand = new Command(ShowDetaill);
             DeleteCommand = new Command<Contact>(async (_selectedContact) =>
             {
                 await DeleteContact(_selectedContact);
@@ -82,10 +99,20 @@ namespace Contacts.ViewModels
 
             AddOrUpdateContactComand = new Command(async () =>
             {
+                AddSubscriptionBase();
                 await App.Current.MainPage.Navigation.PushAsync(new CreateAndUpdateUser(new Contact()));
             });
         }
 
+        private void LoadContacts()
+        {
+            var monkeyContacts = monkeyManager.GetMonkey<Contact>("contacts");
+
+            if (monkeyContacts != null)
+            {
+                Contacts = monkeyContacts;
+            }
+        }
 
         private void AddSubscriptionBase()
         {
@@ -102,8 +129,10 @@ namespace Contacts.ViewModels
                     Contacts[contactIndex] = contact;
                 }
 
-                SelectedContact = new Contact();
+                monkeyManager.SaveMokey<Contact>(Contacts, "contacts");
+                
                 MessagingCenter.Send<IViewModel, ObservableCollection<Contact>>(this, "ChangeContacts", Contacts);
+                SelectedContact = new Contact();
             }));
         }
 
@@ -128,9 +157,10 @@ namespace Contacts.ViewModels
             }
         }
 
-        private async void ShowDetaill()
+        private async void ShowDetaill(Contact selectedContact)
         {
-            await App.Current.MainPage.Navigation.PushAsync(new DetailPage(SelectedContact));
+            if (selectedContact.Id != Guid.Empty)
+                await PopupNavigation.Instance.PushAsync(new ContactDetailView(selectedContact));
         }
 
         private void Call(Contact _selectedContact)
@@ -144,6 +174,8 @@ namespace Contacts.ViewModels
             {
                 Contacts.Remove(_selectedContact);
                 SelectedContact = new Contact();
+
+                monkeyManager.SaveMokey<Contact>(Contacts, "contacts");
             }
             else
             {

@@ -8,7 +8,7 @@
     <ContentPage.Content >
         <ScrollView>  
             <StackLayout Padding="10" VerticalOptions="Center">
-            
+
                 <Label Style="{StaticResource labelTitle}" 
                        Text="Contacts App"
                        TextColor="{StaticResource Primary}" />
